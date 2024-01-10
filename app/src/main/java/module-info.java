@@ -1,4 +1,4 @@
-module com.mycompany.airplanecontroller {
+module com.mycompany.finalairplane {
     requires javafx.controls;
-    exports com.mycompany.airplanecontroller;
+    exports com.mycompany.finalairplane;
 }

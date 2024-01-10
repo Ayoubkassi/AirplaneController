@@ -1,4 +1,4 @@
-package com.mycompany.airplanecontroller;
+package com.mycompany.finalairplane;
 
 public class SystemInfo {
 
