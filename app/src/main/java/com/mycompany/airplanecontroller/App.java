@@ -16,7 +16,8 @@ import java.io.FileNotFoundException;
  */
 public class App extends Application {
 
-    private ImageView airplane;
+    private ImageView airplane1;
+    private ImageView airplane2;
     
      public static void resizeImageView(ImageView imageView, double scaleFactor) {
         imageView.setScaleX(scaleFactor);
@@ -33,22 +34,34 @@ public class App extends Application {
         Image airplaneImg = new Image(new FileInputStream("/home/kassi/Desktop/2.png"));
 
         // Create ImageViews for each image
-        ImageView object = new ImageView(objectImg);
-        ImageView background = new ImageView(backgroundImg);
-        airplane = new ImageView(airplaneImg);
-        resizeImageView(background, 0.5);
-        resizeImageView(airplane, 0.5);
+        // 1 -> european 
+        // 2 -> russian
         
-        translateXImageView(background,-520);
-        translateXImageView(airplane,-520);
+        ImageView object1 = new ImageView(objectImg);
+        ImageView background1 = new ImageView(backgroundImg);
+        airplane1 = new ImageView(airplaneImg);
+        
+        ImageView background2 = new ImageView(backgroundImg);
+        airplane2 = new ImageView(airplaneImg);
+        resizeImageView(background1, 0.5);
+        resizeImageView(airplane1, 0.5);
+        
+        resizeImageView(background2, 0.9);
+        resizeImageView(airplane2, 0.5);
+        
+        translateXImageView(background1,-520);
+        translateXImageView(airplane1,-520);
+        
+        translateXImageView(background2,520);
+        translateXImageView(airplane2,520);
         
 
         // Set the size of the StackPane to match the objectImg
         StackPane stackPane = new StackPane();
-        stackPane.getChildren().addAll(background, object, airplane);
+        stackPane.getChildren().addAll(background1,background2, object1, airplane1,airplane2);
 
         // Center the content of the StackPane
-        StackPane.setAlignment(object, javafx.geometry.Pos.CENTER);
+        StackPane.setAlignment(object1, javafx.geometry.Pos.CENTER);
 
         var scene = new Scene(stackPane, objectImg.getWidth(), objectImg.getHeight());
 
@@ -56,13 +69,17 @@ public class App extends Application {
         scene.setOnKeyPressed(event -> {
             KeyCode keyCode = event.getCode();
             if (keyCode == KeyCode.RIGHT) {
-                rotateAirplane(5); // Rotate 5 degrees to the right
+                rotateAirplane1(5); // Rotate 5 degrees to the right
+                rotateBackground2(5,background2);
             } else if (keyCode == KeyCode.LEFT) {
-                rotateAirplane(-5); // Rotate 5 degrees to the left
+                rotateAirplane1(-5); // Rotate 5 degrees to the left
+                rotateBackground2(-5,background2);
             } else if (keyCode == KeyCode.UP) {
                 translateAirplaneY(-10); // Move 10 units up
+                translateBackground2Y(-10,background2);
             } else if (keyCode == KeyCode.DOWN) {
                 translateAirplaneY(10); // Move 10 units down
+                translateBackground2Y(10,background2);
             }
         });
 
@@ -70,18 +87,33 @@ public class App extends Application {
         stage.show();
 
         // Center the content of the StackPane after showing the stage
-        StackPane.setAlignment(airplane, javafx.geometry.Pos.CENTER);
-        StackPane.setAlignment(background, javafx.geometry.Pos.CENTER);
+        StackPane.setAlignment(airplane1, javafx.geometry.Pos.CENTER);
+        StackPane.setAlignment(background1, javafx.geometry.Pos.CENTER);
     }
 
-    private void rotateAirplane(double degrees) {
+    private void rotateAirplane1(double degrees) {
         // Add rotation to the airplane
-        airplane.setRotate(airplane.getRotate() + degrees);
+        airplane1.setRotate(airplane1.getRotate() + degrees);
+    }
+    
+     private void rotateBackground2(double degrees , ImageView background) {
+        // Add rotation to the airplane
+        background.setRotate(background.getRotate() - degrees);
     }
 
     private void translateAirplaneY(double deltaY) {
         // Add translation in the Y-axis
-        airplane.setTranslateY(airplane.getTranslateY() + deltaY);
+        if( (airplane1.getTranslateY() < -190 && deltaY < 0) ||  (airplane1.getTranslateY() > 190 && deltaY > 0 ) )
+               return;
+        airplane1.setTranslateY(airplane1.getTranslateY() + deltaY);
+        System.out.println("value :"+ airplane1.getTranslateY());
+    }
+    
+    private void translateBackground2Y(double deltaY , ImageView background) {
+        // Add translation in the Y-axis
+        if( (background.getTranslateY() >= 190 && deltaY < 0) || ( background.getTranslateY() < -200 && deltaY > 0 ))
+                return;
+        background.setTranslateY(background.getTranslateY() - deltaY);
     }
 
     public static void main(String[] args) {
